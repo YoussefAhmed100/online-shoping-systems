@@ -12,7 +12,7 @@ async function bootstrap() {
   }));
   app.enableCors(); 
   app.use(compression());
-  await app.listen(process.env.PORT);
+  await app.listen(process.env.PORT||3000);
 }
 bootstrap();
 
