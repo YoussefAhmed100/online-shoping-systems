@@ -1,21 +1,15 @@
-# Use Node.js image as the base
-FROM node:18
-
-# Set the working directory inside the container
+# Stage 1: Build the application
+FROM node:20.11.0 AS build
 WORKDIR /app
-
-# Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy the rest of the app’s source code
 COPY . .
-
-# Build the NestJS app
 RUN npm run build
 
-# Expose the port your app runs on
+# Stage 2: Run the application
+FROM node:20.11.0
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
 EXPOSE 3000
-
-# Start the app
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/main"]

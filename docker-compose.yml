@@ -1,28 +1,31 @@
-version: '3.8'
-
+version: '3'
 services:
-  app:
+  nestjs-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nestjs_app
-    ports:
-      - "3000:3000"
+    container_name: nestjs-app
     environment:
-      - NODE_ENV=production
-      - MONGODB_URI=mongodb+srv://eco_book:eco123@cluster0.ccsr3.mongodb.net/eco_book?retryWrites=true&w=majority&appName=Cluster0
+      - MONGO_URI=mongodb+srv://eco_book:eco123@cluster0.mongodb.net/yourDatabase?retryWrites=true&w=majority
     depends_on:
-      - mongo_db
+      - nginx
+    networks:
+      - app-network
 
-  mongo_db:
-    image: mongo:latest
-    container_name: mongo_db
-    ports:
-      - "27017:27017"
+  nginx:
+    image: nginx:latest
+    container_name: nginx
     volumes:
-      - mongo_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=eco123
-volumes:
-  mongo_data:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certs:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - nestjs-app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
