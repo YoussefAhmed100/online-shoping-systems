@@ -33,6 +33,7 @@
     "class-validator": "^0.14.1",
     "cloudinary": "^2.5.1",
     "compression": "^1.7.5",
+    "gh-pages": "^6.2.0",
     "mongoose": "^8.7.1",
     "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
