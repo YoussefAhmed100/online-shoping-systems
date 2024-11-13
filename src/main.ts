@@ -20,7 +20,7 @@ async function bootstrap() {
 //  setup swagger
   setupSwagger(app);
 
-  await app.listen(process.env.PORT||3000);
+  await app.listen(process.env.PORT,'0.0.0.0');
 }
 
 if (require.main === module) {
