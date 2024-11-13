@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+
 import { ValidationPipe } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import { AppModule } from './app.module';
 import { setupSwagger } from './config/swagger';
 import { Handler } from 'express';
-import * as dotenv from 'dotenv';
 
 
 async function bootstrap() {
@@ -21,8 +22,10 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT||3000);
 }
+
 if (require.main === module) {
   bootstrap();
+
 }
 
 // لتوافق Vercel، استخدم الوظائف التالية
