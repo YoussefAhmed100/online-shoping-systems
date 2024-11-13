@@ -16,6 +16,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+   
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as compression from 'compression';
 import { setupSwagger } from './config/swagger';
+import { Handler } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,13 +12,26 @@ async function bootstrap() {
     
   }));
   app.enableCors(); 
-  app.use(compression());
+
 //  setup swagger
   setupSwagger(app);
 
   await app.listen(process.env.PORT||3000);
 }
-bootstrap();
+if (require.main === module) {
+  bootstrap();
+}
+
+// لتوافق Vercel، استخدم الوظائف التالية
+export const handler: Handler = async (event, context) => {
+  const app = await NestFactory.create(AppModule);
+  return app.listen(3000).then(() => {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Hello from NestJS on Vercel" })
+    };
+  });
+};
 
 
 //.X3kz4PQbj.A!DL
