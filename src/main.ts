@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './config/swagger';
 import { Handler } from 'express';
+import * as dotenv from 'dotenv';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +14,7 @@ async function bootstrap() {
     
   }));
   app.enableCors(); 
+  dotenv.config(); 
 
 //  setup swagger
   setupSwagger(app);
