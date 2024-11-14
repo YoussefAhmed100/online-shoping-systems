@@ -1,4 +1,3 @@
-// dto/create-order.dto.ts
 import { IsNotEmpty, IsArray, ValidateNested, IsNumber, IsEnum, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderStatus } from '../enums/order-status.enum';

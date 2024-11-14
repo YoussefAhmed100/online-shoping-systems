@@ -37,8 +37,7 @@ export class CategoryService {
       });
       return category.save();
     } catch (error) {
-      console.error("Error in create:", error);
-      throw new InternalServerErrorException('An error occurred while creating the category');
+      throw new BadRequestException('Category already exists');
     }
   }
 
@@ -66,7 +65,7 @@ export class CategoryService {
       return category;
     } catch (error) {
       console.error("Error in findOne:", error);
-      throw new InternalServerErrorException('An error occurred while retrieving the category');
+      throw new NotFoundException(`Category with ID ${id} not found`);
     }
   }
 
