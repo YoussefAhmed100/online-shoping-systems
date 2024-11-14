@@ -64,8 +64,11 @@ export class ProductsService {
       }
       return product;
     } catch (error) {
-      console.error("Error in findOne:", error);
-      throw new InternalServerErrorException('An error occurred while retrieving the product');
+      if (!(error instanceof NotFoundException)) {
+        console.error("Unexpected error in findOne:", error);
+        throw new InternalServerErrorException('An unexpected error occurred');
+      }
+      throw error; 
     }
   }
 
