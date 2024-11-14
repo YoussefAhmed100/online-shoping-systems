@@ -1,4 +1,3 @@
-// src/products/product.controller.ts
 import { Controller, Post, Get, Put, Delete, Body, Param, UploadedFiles, UseInterceptors,  Patch,  Query, UseGuards } from '@nestjs/common';
 import { ProductsService } from './product.service';
 import {  FilesInterceptor } from '@nestjs/platform-express';
