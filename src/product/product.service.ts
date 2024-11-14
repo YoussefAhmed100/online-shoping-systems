@@ -10,7 +10,7 @@ import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class ProductsService {
-  private readonly resPerPage = 2;
+  private readonly resPerPage = 8;
 
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
@@ -58,7 +58,7 @@ export class ProductsService {
   async findOne(id: string): Promise<Product> {
     try {
       this.validateObjectId(id);
-      const product = await this.productModel.findById(id).populate("category").exec();
+      const product = await this.productModel.findById(id).exec();
       if (!product) {
         throw new NotFoundException('Product not found');
       }
