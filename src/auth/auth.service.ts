@@ -65,8 +65,8 @@ export class AuthService {
       const token = this.jwtService.sign({ id: user._id });
       return { token };
     } catch (error) {
-      console.error('Error in login:', error);
-      throw new InternalServerErrorException('An error occurred during login');
+    
+      throw new UnauthorizedException('Invalid email or password');
     }
   }
 }
