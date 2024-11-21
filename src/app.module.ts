@@ -19,7 +19,13 @@ import { CategoryModule } from './category/category.module';
       envFilePath:'.env'
 
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRoot(process.env.MONGODB_URI,{
+    
+      tls: true, // Ensure TLS is enabled
+      tlsInsecure: false, // Disable insecure connections
+      serverSelectionTimeoutMS: 5000, // Timeout for server selection
+    }
+    ),
     ProductModule, AuthModule, CloudinaryModule, OrderModule, UserModule, CategoryModule],
   controllers: [AppController],
   providers: [AppService,CloudinaryProvider],

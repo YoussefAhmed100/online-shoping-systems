@@ -28,6 +28,13 @@ export class Order extends Document {
 
     @Prop({ type: String, enum: OrderStatus, default: OrderStatus.PENDING })
     status: OrderStatus;
+    @Prop({
+        required: true,
+        unique: true,
+        match: [/^\+?[1-9]\d{1,14}$/, 'Phone number must be a valid E.164 format'],
+      })
+     
+      phone: string;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

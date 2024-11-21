@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { setupSwagger } from './config/swagger';
 import { Handler } from 'express';
+import * as mongoose from 'mongoose';
+
 
 
 async function bootstrap() {
@@ -18,6 +20,7 @@ async function bootstrap() {
 
 //  setup swagger
   setupSwagger(app);
+  mongoose.set('debug', true);
 
   await app.listen(process.env.PORT,'0.0.0.0');
 }
@@ -39,4 +42,4 @@ export const handler: Handler = async (event, context) => {
 };
 
 
-//.X3kz4PQbj.A!DL
+
