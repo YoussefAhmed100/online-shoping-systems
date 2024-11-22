@@ -3,6 +3,8 @@ import mongoose, { Document, Types } from 'mongoose';
 import { User } from 'src/auth/schema/user.schema';
 import { Product } from 'src/product/schema/product.schema';
 import { OrderStatus } from '../enums/order-status.enum';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { EgyptianCity } from '../enums/egyptian-cities.enum.ts';
 
 @Schema()
 export class OrderedProduct {
@@ -28,13 +30,28 @@ export class Order extends Document {
 
     @Prop({ type: String, enum: OrderStatus, default: OrderStatus.PENDING })
     status: OrderStatus;
+   
     @Prop({
         required: true,
-        unique: true,
-        match: [/^\+?[1-9]\d{1,14}$/, 'Phone number must be a valid E.164 format'],
+        enum: EgyptianCity,
+        type: String,
       })
-     
+      city: EgyptianCity;
+
+      @Prop({
+        required: true,
+        unique: true,
+        validate: {
+          validator: (phone: string) => {
+            const phoneNumber = parsePhoneNumberFromString(phone);
+            return phoneNumber?.isValid() ?? false;
+          },
+          message: 'Invalid phone number. Please provide a valid phone number in international format.',
+        },
+      })
       phone: string;
+      
+
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
