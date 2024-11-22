@@ -7,6 +7,8 @@ import { AuthModule } from '../auth/auth.module';
 import { CloudinaryProvider } from '../cloudinary/cloudinary.provider';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { CategoryModule } from 'src/category/category.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports:[
@@ -15,7 +17,12 @@ import { CategoryModule } from 'src/category/category.module';
     CategoryModule
   ],
   controllers: [ProductsController],
-  providers: [ProductsService,CloudinaryProvider,CloudinaryService]
+  providers: [ProductsService,CloudinaryProvider,CloudinaryService,
+  {  
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard
+  }
+  ]
 
 })
 export class ProductModule {}

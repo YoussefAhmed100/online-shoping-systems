@@ -11,6 +11,7 @@ import { CloudinaryProvider } from './cloudinary/cloudinary.provider';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -19,6 +20,10 @@ import { CategoryModule } from './category/category.module';
       envFilePath:'.env'
 
     }),
+    ThrottlerModule.forRoot([{
+      ttl:5* 1000,
+      limit: 5,
+    }]),
     MongooseModule.forRoot(process.env.MONGODB_URI,{
     
       tls: true, // Ensure TLS is enabled

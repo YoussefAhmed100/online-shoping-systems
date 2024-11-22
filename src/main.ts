@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 import { setupSwagger } from './config/swagger';
 import { Handler } from 'express';
 import * as mongoose from 'mongoose';
+import helmet from 'helmet';
 
 
 
@@ -15,31 +16,23 @@ async function bootstrap() {
     transform: true,
     
   }));
+  app.use(helmet());
   app.enableCors(); 
   dotenv.config(); 
 
 //  setup swagger
   setupSwagger(app);
   mongoose.set('debug', true);
+ 
 
   await app.listen(process.env.PORT,'0.0.0.0');
 }
 
-if (require.main === module) {
   bootstrap();
 
-}
 
-// لتوافق Vercel، استخدم الوظائف التالية
-export const handler: Handler = async (event, context) => {
-  const app = await NestFactory.create(AppModule);
-  return app.listen(3000).then(() => {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Hello from NestJS on Vercel" })
-    };
-  });
-};
+
+
 
 
 

@@ -9,6 +9,7 @@ import { Role } from 'src/auth/enums/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Product } from './schema/product.schema';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('products')
 export class ProductsController {
@@ -29,7 +30,7 @@ export class ProductsController {
   ) {
     return this.productService.create(createProductDto, files);
   }
- 
+  @Roles(Role.Moderator,Role.Admin,Role.User)
   @Get('allProduct')
  
   // @UseGuards(AuthGuard(),RolesGuard)
@@ -37,13 +38,14 @@ export class ProductsController {
  
     return this.productService.findAll(query);
   }
-
+  @Roles(Role.Moderator,Role.Admin,Role.User)
   @Get(':id')
   findOne(@Param('id') id: string):Promise<Product> {
     return this.productService.findOne(id);
   }
   // ****************************
   @Patch(':id')
+  @SkipThrottle()
   @Roles(Role.Moderator,Role.Admin)
   @UseGuards(AuthGuard(),RolesGuard)
   @UseInterceptors(FilesInterceptor('images'))
@@ -58,6 +60,7 @@ export class ProductsController {
  
 
   @Delete(':id')
+  @SkipThrottle()
   @Roles(Role.Moderator,Role.Admin)
   @UseGuards(AuthGuard(),RolesGuard)
   remove(@Param('id') id: string) {

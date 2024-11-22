@@ -7,6 +7,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports:[
@@ -25,7 +27,12 @@ import { JwtStrategy } from './jwt.strategy';
     MongooseModule.forFeature([{name:"User",schema:UserSchema}])
   ],
   controllers: [AuthController],
-  providers: [AuthService,JwtStrategy],
+  providers: [AuthService,JwtStrategy,
+    {  
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ],
   exports:[PassportModule,JwtModule]
 
 })
