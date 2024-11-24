@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SinupDto } from './dto/sinup.dto';
 import { LoginDto } from './dto/login.dto';
@@ -15,6 +15,7 @@ export class AuthController {
 
 
     }
+   
 
     @Post('/login')
     async login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
