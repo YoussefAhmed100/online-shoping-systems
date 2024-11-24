@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import {Document}from'mongoose'
 import { Role } from "../enums/role.enum";
-import { RouterProxy } from "@nestjs/core/router/router-proxy";
+
+import { Exclude } from "class-transformer";
 
 @Schema({
     timestamps:true
@@ -11,7 +12,8 @@ export class User extends Document{
     name: string;
     @Prop()
     email: string;
-    @Prop()
+    @Prop({select: false})
+    @Exclude()
     password: string;
 
     @Prop({

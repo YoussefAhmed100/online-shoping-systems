@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   // Signup method
-  async sinup(sinupDto: SinupDto): Promise<{ token: string }> {
+  async sinup(sinupDto: SinupDto): Promise<{ user: User, token: string }> {
     try {
       const { name, email, password, role } = sinupDto;
       
@@ -37,7 +37,7 @@ export class AuthService {
 
       // Generate JWT token
       const token = this.jwtService.sign({ id: user._id });
-      return { token };
+      return {user,token};
     } catch (error) {
       console.error('Error in sinup:', error);
       throw new InternalServerErrorException('An error occurred during signup');
@@ -45,15 +45,16 @@ export class AuthService {
   }
 
   // Login method
-  async login(loginDto: LoginDto): Promise<{ token: string }> {
+  async login(loginDto: LoginDto): Promise<{user: User, token: string }> {
     try {
       const { email, password } = loginDto;
       
       // Find user by email
-      const user = await this.userModel.findOne({ email });
+      const user = await this.userModel.findOne({ email }).exec();
       if (!user) {
         throw new UnauthorizedException('Invalid email or password');
       }
+      const userwith = await this.userModel.findOne({ email }).exec();
 
       // Check if password is valid
       const isValidPassword = await bcrypt.compare(password, user.password);
@@ -63,7 +64,7 @@ export class AuthService {
 
       // Generate JWT token
       const token = this.jwtService.sign({ id: user._id });
-      return { token };
+      return { user,token };
     } catch (error) {
     
       throw new UnauthorizedException('Invalid email or password');
