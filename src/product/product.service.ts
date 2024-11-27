@@ -10,7 +10,6 @@ import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class ProductsService {
-  private readonly resPerPage = 8;
 
   constructor(
     @InjectModel(Product.name) private productModel: Model<Product>,
@@ -36,7 +35,7 @@ export class ProductsService {
   // Retrieve all products with pagination
   async findAll(query: Query): Promise<Product[]> {
     try {
-      const resPerPage = 4;  // set as needed
+      const resPerPage = 8;  // set as needed
       const currentPage = Number(query.page) || 1;
       const skip = (currentPage - 1) * resPerPage;
       const keyword = query.keyword

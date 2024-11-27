@@ -13,6 +13,8 @@ import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 
+import { FavoriteModule } from './favorite/favorite.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -31,7 +33,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       serverSelectionTimeoutMS: 5000, // Timeout for server selection
     }
     ),
-    ProductModule, AuthModule, CloudinaryModule, OrderModule, UserModule, CategoryModule],
+    ProductModule, AuthModule, CloudinaryModule, OrderModule, UserModule, CategoryModule, FavoriteModule],
   controllers: [AppController],
   providers: [AppService,CloudinaryProvider],
 })

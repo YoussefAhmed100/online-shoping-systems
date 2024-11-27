@@ -1,6 +1,7 @@
 export enum CategoryType {
-    MEN = 'Men',
-    WOMEN = 'Women',
-    KIDS = 'Kids',
-    ACCESSORIES = 'Accessories',
+    MEN = 'men',
+    WOMEN = 'women',
+    KIDS = 'kids',
+    ACCESSORIES = 'accessories',
+    SHOSE='shose '
   }

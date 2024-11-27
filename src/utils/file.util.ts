@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
-const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; 
+const allowedTypes = ['image/jpeg', 'image/png', 'image/gif','image/jfif']; 
 const maxSize = 2 * 1024 * 1024; // 2MB in bytes
 let maxFiles = 5; 
 

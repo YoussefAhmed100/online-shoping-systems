@@ -24,17 +24,16 @@ export class CloudinaryService {
 
 
 
-  // Uploads a single image and returns only { url, publicId }
   async uploadImage(file: Express.Multer.File): Promise<{ url: string; publicId: string }> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         { folder: 'products' }, // Optional: set a folder to organize images
         (error, result) => {
           if (error) return reject(error);
+          console.log(error)
 
-          // Return only the url and publicId from the result
           resolve({
-            url: result.secure_url,  // secure_url from Cloudinary response
+            url: result.secure_url,  
             publicId: result.public_id,  // public_id from Cloudinary response
           });
         },

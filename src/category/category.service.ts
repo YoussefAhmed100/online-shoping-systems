@@ -18,8 +18,8 @@ export class CategoryService {
   // Create a new category
   async create(createCategoryDto: CreateCategoryDto, file: Express.Multer.File) {
     try {
-      const { name, type } = createCategoryDto;
-      const existcategory = await this.categoryModel.findOne({ name, type });
+      const {  title,type } = createCategoryDto;
+      const existcategory = await this.categoryModel.findOne({title,  type });
       if (existcategory) {
         throw new BadRequestException('Category already exists');
       }
@@ -37,7 +37,8 @@ export class CategoryService {
       });
       return category.save();
     } catch (error) {
-      throw new BadRequestException('Category already exists');
+      console.log(error)
+      throw new BadRequestException('error in create category');
     }
   }
 

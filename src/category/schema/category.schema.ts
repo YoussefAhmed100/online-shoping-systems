@@ -5,7 +5,7 @@ import { CategoryType } from '../enums/category-type.enum';
 @Schema()
 export class Category extends Document {
   @Prop({ required: true,unique:true })
-  name: string;
+  title: string;
 
   @Prop({ required: true })
   type: CategoryType;
