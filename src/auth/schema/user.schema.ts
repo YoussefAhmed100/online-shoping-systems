@@ -12,8 +12,8 @@ export class User extends Document{
     name: string;
     @Prop()
     email: string;
-    @Prop({select: false})
-    @Exclude()
+    @Prop()
+   
     password: string;
 
     @Prop({

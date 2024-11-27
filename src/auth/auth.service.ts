@@ -45,16 +45,15 @@ export class AuthService {
   }
 
   // Login method
-  async login(loginDto: LoginDto): Promise<{user: User, token: string }> {
+  async login(loginDto: LoginDto): Promise<{user: User,token: string }> {
     try {
       const { email, password } = loginDto;
       
       // Find user by email
-      const user = await this.userModel.findOne({ email }).exec();
+      const user = await this.userModel.findOne({ email });
       if (!user) {
-        throw new UnauthorizedException('Invalid email or password');
+        throw new UnauthorizedException('user not fond');
       }
-      const userwith = await this.userModel.findOne({ email }).exec();
 
       // Check if password is valid
       const isValidPassword = await bcrypt.compare(password, user.password);
@@ -64,10 +63,11 @@ export class AuthService {
 
       // Generate JWT token
       const token = this.jwtService.sign({ id: user._id });
-      return { user,token };
+      return {user, token };
     } catch (error) {
     
-      throw new UnauthorizedException('Invalid email or password');
+      console.error('Error in login:', error);
+      throw new UnauthorizedException('error in login function');
     }
   }
 }
