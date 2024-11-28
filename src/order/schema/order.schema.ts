@@ -1,7 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, Types } from 'mongoose';
-import { User } from 'src/auth/schema/user.schema';
-import { Product } from 'src/product/schema/product.schema';
 import { OrderStatus } from '../enums/order-status.enum';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { EgyptianCity } from '../enums/egyptian-cities.enum.ts';
@@ -9,10 +7,11 @@ import { EgyptianCity } from '../enums/egyptian-cities.enum.ts';
 @Schema()
 export class OrderedProduct {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true })
-    product: Product;
+    product: Types.ObjectId;
 
-    @Prop({ required: true })
-    quantity: number;
+    @Prop()
+    quantity:string;
+  
 
   
 }
@@ -20,7 +19,7 @@ export class OrderedProduct {
 @Schema({ timestamps: true })
 export class Order extends Document {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-    user: User;
+    user: Types.ObjectId;
 
     @Prop({ type: [OrderedProduct], required: true })
     products: OrderedProduct[];
@@ -34,13 +33,13 @@ export class Order extends Document {
     @Prop({
         required: true,
         enum: EgyptianCity,
-        type: String,
+        
       })
       city: EgyptianCity;
 
       @Prop({
         required: true,
-        unique: true,
+     
         validate: {
           validator: (phone: string) => {
             const phoneNumber = parsePhoneNumberFromString(phone);

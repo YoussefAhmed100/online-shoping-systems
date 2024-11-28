@@ -13,11 +13,13 @@ export class OrderService {
   // Create a new order
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
     try {
-      const newOrder = new this.orderModel(createOrderDto);
+      const newOrder = await this.orderModel.create(createOrderDto);
       return await newOrder.save();
     } catch (error) {
       console.error('Error creating order:', error);
-      throw new InternalServerErrorException('An error occurred while creating the order');
+      throw new InternalServerErrorException("An error occurred while creating the order")
+
+    
     }
   }
 

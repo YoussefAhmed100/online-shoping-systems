@@ -11,7 +11,6 @@ export class CreateOrderDto {
     user: string;  // Expecting the user ID here
 
     @IsArray()
-    @ValidateNested({ each: true })
     @Type(() => OrderedProductDto)
     products: OrderedProductDto[];
 

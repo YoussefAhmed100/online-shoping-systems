@@ -3,7 +3,6 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './schema/order.schema';
-
 import { Role } from 'src/auth/enums/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import{Query as ExpressQuery} from 'express-serve-static-core'
@@ -15,7 +14,7 @@ export class OrderController {
 
     // Only ADMIN and MANAGER
     @Post()
-    @Roles(Role.Admin, Role.Moderator)
+    // @Roles(Role.Admin, Role.Moderator)
     @HttpCode(HttpStatus.CREATED)
     async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
         return this.orderService.createOrder(createOrderDto);
@@ -45,7 +44,7 @@ export class OrderController {
 
     // Only ADMIN can delete an order
     @Delete(':id')
-    @Roles(Role.Admin)
+    // @Roles(Role.Admin)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteOrder(@Param('id') orderId: string): Promise<void> {
         await this.orderService.deleteOrder(orderId);
