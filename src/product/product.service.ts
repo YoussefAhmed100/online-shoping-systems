@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import  { Model, isValidObjectId } from 'mongoose';
 import { Product } from './schema/product.schema';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -19,23 +19,23 @@ export class ProductsService {
   // Create a new product with multiple images
   async create(createProductDto: CreateProductDto, files: Express.Multer.File[]): Promise<Product> {
     try {
-      this.validateAndCheckFiles(files);
+      validateFiles(files);
       const images = await this.uploadImagesToCloudinary(files);
       const product = new this.productModel({
         ...createProductDto,
-        images,
+        images
       });
       return product.save();
     } catch (error) {
-      console.error("Error in create:", error);
-      throw new InternalServerErrorException('An error occurred while creating the product');
+      // console.error("Error in create:", error);
+      throw new InternalServerErrorException('Please enter the valid data to create new products');
     }
   }
 
   // Retrieve all products with pagination
   async findAll(query: Query): Promise<Product[]> {
-    try {
-      const resPerPage = 8;  // set as needed
+ 
+      const resPerPage = 8; 
       const currentPage = Number(query.page) || 1;
       const skip = (currentPage - 1) * resPerPage;
       const keyword = query.keyword
@@ -45,41 +45,36 @@ export class ProductsService {
       return await this.productModel.find({ ...keyword })
         .limit(resPerPage)
         .skip(skip)
-        .populate('category')
+        .populate({path:'category',select:"title"})
         .exec();
-    } catch (error) {
-      console.error("Error in findAll:", error);
-      throw new InternalServerErrorException('An error occurred while retrieving products');
-    }
+  
   }
 
   // Retrieve a single product by ID
   async findOne(id: string): Promise<Product> {
-    try {
-      this.validateObjectId(id);
-      const product = await this.productModel.findById(id).exec();
+   
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid  ID Format: ${id}`);
+    }
+      const product = await this.productModel.findById(id).populate({path:'category',select:"title"}).exec();
       if (!product) {
         throw new NotFoundException('Product not found');
       }
       return product;
-    } catch (error) {
-      if (!(error instanceof NotFoundException)) {
-        console.error("Unexpected error in findOne:", error);
-        throw new InternalServerErrorException('An unexpected error occurred');
-      }
-      throw error; 
-    }
+    
   }
 
   // Update a product by ID with optional new images
   async updateProduct(id: string, updateProductDto: UpdateProductDto, files?: Express.Multer.File[]): Promise<Product> {
-    try {
-      this.validateObjectId(id);
-      if (files) this.validateAndCheckFiles(files);
+   
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid  ID Format: ${id}`);
+    }
+      if (files) validateFiles(files);
 
       const product = await this.productModel.findById(id).exec();
       if (!product) {
-        throw new NotFoundException('Product not found');
+        throw new NotFoundException(`Product with ${id} not found`);
       }
 
       if (files && files.length > 0) {
@@ -89,16 +84,15 @@ export class ProductsService {
 
       Object.assign(product, updateProductDto);
       return product.save();
-    } catch (error) {
-      console.error("Error in updateProduct:", error);
-      throw new InternalServerErrorException('An error occurred while updating the product');
-    }
+ 
   }
 
   // Remove a product by ID and delete associated images
   async remove(id: string): Promise<string> {
-    try {
-      this.validateObjectId(id);
+  
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid  ID Format: ${id}`);
+    }
 
       const product = await this.productModel.findById(id).exec();
       if (!product) {
@@ -109,26 +103,11 @@ export class ProductsService {
       await this.productModel.findByIdAndDelete(id).exec();
 
       return 'Product deleted successfully';
-    } catch (error) {
-      console.error("Error in remove:", error);
-      throw new InternalServerErrorException('An error occurred while deleting the product');
-    }
+  
   }
 
-  // Helper: Validate ObjectId
-  private validateObjectId(id: string) {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Invalid ID format: ${id}`);
-    }
-  }
 
-  // Helper: Validate and check files
-  private validateAndCheckFiles(files: Express.Multer.File[]) {
-    validateFiles(files);
-    if (!files || files.length === 0) {
-      throw new BadRequestException('Product images are required');
-    }
-  }
+
 
   // Helper: Upload images to Cloudinary
   private async uploadImagesToCloudinary(files: Express.Multer.File[]) {

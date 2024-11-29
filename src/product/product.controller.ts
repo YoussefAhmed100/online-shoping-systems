@@ -18,11 +18,7 @@ export class ProductsController {
   @Post()
   @Roles(Role.Moderator,Role.Admin)
   @UseGuards(AuthGuard(),RolesGuard)
-  @UseInterceptors(
-    FilesInterceptor('file', 5, {
-     
-    }),
-  )
+  @UseInterceptors(FilesInterceptor('file', 5))
  
   async createProduct(
     @Body() createProductDto: CreateProductDto,

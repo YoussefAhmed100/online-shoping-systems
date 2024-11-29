@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Order } from './schema/order.schema';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -12,15 +12,10 @@ export class OrderService {
 
   // Create a new order
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    try {
+ 
       const newOrder = await this.orderModel.create(createOrderDto);
       return await newOrder.save();
-    } catch (error) {
-      console.error('Error creating order:', error);
-      throw new InternalServerErrorException("An error occurred while creating the order")
 
-    
-    }
   }
 
   // Get all orders with pagination and optional keyword search
@@ -38,58 +33,52 @@ export class OrderService {
         }
       : {};
 
-    try {
+   
       return await this.orderModel
         .find({ ...keyword })
         .limit(resPerPage)
         .skip(skip)
         .exec();
-    } catch (error) {
-      console.error('Error retrieving orders:', error);
-      throw new InternalServerErrorException('An error occurred while retrieving orders');
-    }
+  
   }
 
   // Get orders by user ID
   async getOrdersByUserId(userId: string): Promise<Order[]> {
-    try {
+    if (!isValidObjectId(userId)) {
+      throw new BadRequestException(`Invalid Order ID: ${userId}`);
+    }
+
       return await this.orderModel
         .find({ user: userId })
         .populate('products.product user')
         .exec();
-    } catch (error) {
-      console.error('Error retrieving orders by user ID:', error);
-      throw new InternalServerErrorException('An error occurred while retrieving orders for the user');
-    }
   }
 
   // Update an order
   async updateOrder(orderId: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
-    try {
+    if (!isValidObjectId(orderId)) {
+      throw new BadRequestException(`Invalid Order ID: ${orderId}`);
+    }
+   
       const order = await this.orderModel.findByIdAndUpdate(orderId, updateOrderDto, { new: true }).exec();
       if (!order) {
         throw new NotFoundException(`Order with ID ${orderId} not found`);
       }
       return order;
-    } catch (error) {
-      console.error('Error updating order:', error);
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('An error occurred while updating the order');
-    }
+  
   }
 
   // Delete an order
   async deleteOrder(orderId: string): Promise<Order> {
-    try {
+    if (!isValidObjectId(orderId)) {
+      throw new BadRequestException(`Invalid Order ID: ${orderId}`);
+    }
+  
       const order = await this.orderModel.findByIdAndDelete(orderId).exec();
       if (!order) {
         throw new NotFoundException(`Order with ID ${orderId} not found`);
       }
       return order;
-    } catch (error) {
-      console.error('Error deleting order:', error);
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('An error occurred while deleting the order');
-    }
+  
   }
 }

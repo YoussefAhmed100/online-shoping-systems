@@ -10,7 +10,7 @@ export class OrderedProduct {
     product: Types.ObjectId;
 
     @Prop()
-    quantity:string;
+    quantity:Number;
   
 
   
@@ -25,7 +25,7 @@ export class Order extends Document {
     products: OrderedProduct[];
 
     @Prop({ required: true })
-    totalPrice: number;
+    totalPrice: Number;
 
     @Prop({ type: String, enum: OrderStatus, default: OrderStatus.PENDING })
     status: OrderStatus;

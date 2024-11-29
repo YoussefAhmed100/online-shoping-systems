@@ -16,32 +16,22 @@ export class UserService {
 
   // Get all users
   async findAll(): Promise<User[]> {
-    try {
       return await this.userModel.find().exec();
-    } catch (error) {
-      console.error('Error retrieving users:', error);
-      throw new InternalServerErrorException('An error occurred while retrieving users');
-    }
+   
   }
 
   // Get a user by ID
   async findOne(userId: string): Promise<User> {
-    try {
       const user = await this.userModel.findById(userId).exec();
       if (!user) {
         throw new NotFoundException('User not found');
       }
       return user;
-    } catch (error) {
-      console.error('Error finding user:', error);
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('An error occurred while retrieving the user');
-    }
+   
   }
 
   // Update a user by ID
   async update(userId: string, updateUserDto: UpdateUserDto): Promise<User> {
-    try {
       const user = await this.userModel.findById(userId).exec();
       if (!user) {
         throw new NotFoundException('User not found');
@@ -60,34 +50,23 @@ export class UserService {
       // Update user details
       await user.updateOne(updateUserDto);
       return this.findOne(userId); // Fetch updated user data
-    } catch (error) {
-      console.error('Error updating user:', error);
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('An error occurred while updating the user');
-    }
+   
   }
 
   // Delete a user by ID
-  async delete(userId: string): Promise<void> {
-    try {
+  async delete(userId: string): Promise<string> {
       const result = await this.userModel.deleteOne({ _id: userId }).exec();
       if (result.deletedCount === 0) {
         throw new NotFoundException('User not found');
       }
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('An error occurred while deleting the user');
-    }
+      return "user deleted successfully"
+   
   }
 
   // Delete all users
-  async deleteAll(): Promise<void> {
-    try {
+  async deleteAll(): Promise<string> {
       await this.userModel.deleteMany().exec();
-    } catch (error) {
-      console.error('Error deleting all users:', error);
-      throw new InternalServerErrorException('An error occurred while deleting all users');
-    }
+      return "all users deleted successfully"
+   
   }
 }

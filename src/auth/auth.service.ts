@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -16,37 +16,44 @@ export class AuthService {
   ) {}
 
   // Signup method
-  async sinup(sinupDto: SinupDto): Promise<{ user: User, token: string }> {
-    try {
+  async sinup(sinupDto: SinupDto): Promise<{ user:User; token: string }> {
+ 
       const { name, email, password, role } = sinupDto;
       
       // Check if user already exists
       const existingUser = await this.userModel.findOne({ email });
       if (existingUser) {
-        throw new HttpException('Email already in use', HttpStatus.UNPROCESSABLE_ENTITY);
+        throw new BadRequestException('Email is already in use');
+        
       }
 
       // Hash password and create user
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = await this.userModel.create({
+      const  user = await this.userModel.create({
         name,
         email,
         password: hashedPassword,
         role,
+      
+        
       });
 
+
+    // // Exclude password
+    // const user = await this.userModel
+    // .findById(createdUser._id)
+    // .select('-password')
+    // .lean();
+
       // Generate JWT token
-      const token = this.jwtService.sign({ id: user._id });
+      const token = this.jwtService.sign({ id:user._id });
       return {user,token};
-    } catch (error) {
-      console.error('Error in sinup:', error);
-      throw new InternalServerErrorException('An error occurred during signup');
-    }
+   
   }
 
   // Login method
   async login(loginDto: LoginDto): Promise<{user: User,token: string }> {
-    try {
+   
       const { email, password } = loginDto;
       
       // Find user by email
@@ -64,10 +71,6 @@ export class AuthService {
       // Generate JWT token
       const token = this.jwtService.sign({ id: user._id });
       return {user, token };
-    } catch (error) {
-    
-      console.error('Error in login:', error);
-      throw new UnauthorizedException('error in login function');
-    }
+  
   }
 }

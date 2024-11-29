@@ -3,7 +3,6 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { setupSwagger } from './config/swagger';
-import { Handler } from 'express';
 import * as mongoose from 'mongoose';
 import helmet from 'helmet';
 
@@ -22,7 +21,7 @@ async function bootstrap() {
 
 //  setup swagger
   setupSwagger(app);
-  mongoose.set('debug', true);
+  // mongoose.set('debug', true);
  
 
   await app.listen(process.env.PORT,'0.0.0.0');

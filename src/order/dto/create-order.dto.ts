@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsArray, ValidateNested, IsNumber, IsEnum, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsArray, ValidateNested, IsNumber, IsEnum, IsOptional, IsPositive } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderStatus } from '../enums/order-status.enum';
 import { OrderedProductDto } from './ordered-product.dto';
@@ -16,7 +16,8 @@ export class CreateOrderDto {
 
     @IsNotEmpty()
     @IsNumber()
-    totalPrice: number;
+    @IsPositive()
+    totalPrice: Number;
 
     @IsOptional()
     @IsEnum(OrderStatus)
