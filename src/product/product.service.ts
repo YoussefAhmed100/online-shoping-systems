@@ -18,7 +18,6 @@ export class ProductsService {
 
   // Create a new product with multiple images
   async create(createProductDto: CreateProductDto, files: Express.Multer.File[]): Promise<Product> {
-    try {
       validateFiles(files);
       const images = await this.uploadImagesToCloudinary(files);
       const product = new this.productModel({
@@ -26,10 +25,7 @@ export class ProductsService {
         images
       });
       return product.save();
-    } catch (error) {
-      // console.error("Error in create:", error);
-      throw new InternalServerErrorException('Please enter the valid data to create new products');
-    }
+  
   }
 
   // Retrieve all products with pagination
@@ -45,7 +41,7 @@ export class ProductsService {
       return await this.productModel.find({ ...keyword })
         .limit(resPerPage)
         .skip(skip)
-        .populate({path:'category',select:"title"})
+        .populate({path:'category',select:"title-_id"})
         .exec();
   
   }
@@ -56,7 +52,7 @@ export class ProductsService {
     if (!isValidObjectId(id)) {
       throw new BadRequestException(`Invalid  ID Format: ${id}`);
     }
-      const product = await this.productModel.findById(id).populate({path:'category',select:"title"}).exec();
+      const product = await this.productModel.findById(id).populate({path:'category',select:'title-_id'});
       if (!product) {
         throw new NotFoundException('Product not found');
       }

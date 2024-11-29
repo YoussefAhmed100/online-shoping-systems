@@ -25,7 +25,7 @@ export class UpdateProductDto {
     @IsNumber()
     @Min(0, { message: 'price must be a positive number' })
     @IsNotEmpty({ message: 'price must not be empty' })
-    readonly priceAfterDiscound:string
+    readonly priceAfterDiscound:number
  
   
 
@@ -35,6 +35,18 @@ export class UpdateProductDto {
   images?: { url: string; publicId: string }[]; // Define image structure if needed;
  
   @IsEmpty({message:"you cannot pass category id"})
-  readonly type: Category
+  readonly type: Category;
+
+      // Custom validation logic
+      validate() {
+        if (
+          this.priceAfterDiscound !== undefined &&
+          this.priceAfterDiscound >= this.price
+        ) {
+          throw new Error(
+            'price After Discound must be lower than price'
+          );
+        }
+      }
 
 }

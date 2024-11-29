@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 
 @Schema()
 class ProductImage {
-  @Prop({ required: true })
+  @Prop({  })
   url: string;
 
-  @Prop({ required: true })
+  @Prop({  })
   publicId: string;
 }
 // **************************************
