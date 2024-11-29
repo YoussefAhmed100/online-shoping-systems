@@ -12,10 +12,20 @@ export class UpdateProductDto {
   @IsString()
   readonly description?: string;
   @IsOptional()
+  @IsNumber()
+  @Min(0, { message: 'quantity must be a positive number' })
+  @IsNotEmpty({ message: 'quantity must not be empty' })
+  quantity:number
+  @IsOptional()
     @IsNumber()
     @Min(0, { message: 'Price must be a positive number' })
     @IsNotEmpty({ message: 'price must not be empty' })
-    readonly price:Number
+    readonly price:number
+    @IsOptional()
+    @IsNumber()
+    @Min(0, { message: 'price must be a positive number' })
+    @IsNotEmpty({ message: 'price must not be empty' })
+    readonly priceAfterDiscound:string
  
   
 
