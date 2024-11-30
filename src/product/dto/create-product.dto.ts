@@ -1,4 +1,4 @@
-import { IsArray,  IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
+import {  IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 
 import { Type } from "class-transformer";
 class ProductImageDto {
@@ -22,19 +22,20 @@ export class CreateProductDto{
     @IsNotEmpty()
     readonly  description:string
     @IsNotEmpty()
-    @IsNumber()
+
+    // @IsNumber()
     @IsOptional()
-    @Min(0, { message: 'quantity must be a positive number' })
+    // @Min(0, { message: 'quantity must be a positive number' })
     @IsNotEmpty({ message: 'quantity must not be empty' })
     quantity:number
     @IsNotEmpty()
-    @IsNumber()
-    @Min(0, { message: 'price must be a positive number' })
+    // @IsNumber()
+    // @Min(0, { message: 'price must be a positive number' })
     @IsNotEmpty({ message: 'price must not be empty' })
     readonly price:number
     @IsOptional()
-    @IsNumber()
-    @Min(0, { message: 'price must be a positive number' })
+    // @IsNumber()
+    // @Min(0, { message: 'price must be a positive number' })
     @IsNotEmpty({ message: 'price must not be empty' })
     readonly priceAfterDiscound:number
 

@@ -20,14 +20,14 @@ export class Product{
     @Prop({ required: true })
     description: string;
     
-    @Prop({ required: true })
-    quantity:number
+    @Prop({})
+    quantity:string
 
   
     @Prop()
-    price: number;
+    price: string;
     @Prop()
-    priceAfterDiscound:number
+    priceAfterDiscound:string
   
     @Prop( {type: [ProductImage]})
     images: ProductImage[];
